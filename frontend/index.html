@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Data Insight</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <div class="logo-mark">AI</div>
+
+            <div>
+                <h1>Data Insight</h1>
+                <span>AI Data Analytics</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <button
+                class="nav-item active"
+                data-tab="analysis"
+            >
+                <span class="nav-icon">◈</span>
+                <span>AI 데이터 분석</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="summary"
+            >
+                <span class="nav-icon">▦</span>
+                <span>데이터 요약</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="chart"
+            >
+                <span class="nav-icon">⌁</span>
+                <span>데이터 추세</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="conversations"
+            >
+                <span class="nav-icon">◌</span>
+                <span>대화 기록</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="data"
+            >
+                <span class="nav-icon">▤</span>
+                <span>데이터 관리</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="dark-mode-toggle"
+                class="theme-button"
+            >
+                ◐ 다크 모드
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- 메인 영역 -->
+    <main class="main-content">
+
+        <!-- 상단 헤더 -->
+        <header class="topbar">
+
+            <div>
+                <p class="topbar-label">AI DATA INSIGHT</p>
+
+                <h2 id="page-title">
+                    AI 데이터 분석
+                </h2>
+
+                <p id="page-description">
+                    저장된 데이터를 기반으로 AI에게 질문하고 분석 결과를 확인하세요.
+                </p>
+            </div>
+
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                시스템 정상
+            </div>
+
+        </header>
+
+
+        <!-- ========================================= -->
+        <!-- AI 데이터 분석 -->
+        <!-- ========================================= -->
+
+        <section
+            id="tab-analysis"
+            class="tab-content active"
+        >
+
+            <div class="analysis-layout">
+
+                <div class="card analysis-input-card">
+
+                    <div class="card-title">
+                        <span>AI 분석 질문</span>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="provider">
+                            AI 모델
+                        </label>
+
+                        <select id="provider">
+
+
+                            <option value="gemini">
+                                Gemini
+                            </option>
+
+                            <option value="openai">
+                                OpenAI
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="question">
+                            질문
+                        </label>
+
+                        <textarea
+                            id="question"
+                            rows="7"
+                            placeholder="예: 최근 데이터의 추세를 분석해줘."
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        id="chat-button"
+                        class="primary-button"
+                    >
+                        AI에게 질문하기
+                    </button>
+
+
+                    <div
+                        id="chat-loading"
+                        class="loading hidden"
+                    >
+                        AI가 데이터를 분석하고 있습니다...
+                    </div>
+
+                </div>
+
+
+                <div class="card answer-card">
+
+                    <div class="card-title">
+                        <span>AI 분석 결과</span>
+
+                        <span class="result-badge">
+                            AI
+                        </span>
+                    </div>
+
+                    <div id="answer">
+                        <div class="empty-state">
+                            <div class="empty-icon">✦</div>
+
+                            <p>AI에게 질문하면<br>분석 결과가 이곳에 표시됩니다.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- 데이터 요약 -->
+        <!-- ========================================= -->
+
+        <section
+            id="tab-summary"
+            class="tab-content"
+        >
+
+            <div
+                id="summary"
+                class="summary-grid"
+            >
+                <div class="loading-card">
+                    데이터 요약을 불러오는 중입니다.
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- 데이터 추세 -->
+        <!-- ========================================= -->
+
+        <section
+            id="tab-chart"
+            class="tab-content"
+        >
+
+
+            <div class="card chart-card">
+
+                <div class="card-title">
+                    <span>데이터 그래프</span>
+
+                    <span class="result-badge">
+                        Trend
+                    </span>
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="data-chart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- 대화 기록 -->
+        <!-- ========================================= -->
+
+        <section
+            id="tab-conversations"
+            class="tab-content"
+        >
+
+            <div class="section-header">
+
+                <button
+                    id="load-conversations-button"
+                    class="secondary-button"
+                >
+                    기록 새로고침
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <div
+                    id="conversation-list"
+                    class="conversation-list"
+                >
+                    <div class="empty-state">
+                        저장된 대화가 없습니다.
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- 데이터 관리 -->
+        <!-- ========================================= -->
+
+        <section
+            id="tab-data"
+            class="tab-content"
+        >
+
+            <div class="section-header">
+
+                <button
+                    id="export-csv-button"
+                    class="secondary-button"
+                >
+                    CSV 다운로드
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    <span>데이터 추가</span>
+                </div>
+
+
+                <div class="data-input-grid">
+
+                    <div class="form-group">
+
+                        <label for="data-date">
+                            날짜
+                        </label>
+
+                        <input
+                            type="date"
+                            id="data-date"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="data-value">
+                            값
+                        </label>
+
+                        <input
+                            type="number"
+                            id="data-value"
+                            step="0.01"
+                            placeholder="예: 100.5"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="data-memo">
+                            메모
+                        </label>
+
+                        <input
+                            type="text"
+                            id="data-memo"
+                            placeholder="메모를 입력하세요."
+                        >
+
+                    </div>
+
+
+                    <div class="form-group button-group">
+
+                        <label>&nbsp;</label>
+
+                        <button
+                            id="add-data-button"
+                            class="primary-button"
+                        >
+                            데이터 추가
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div id="data-message"></div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    <span>저장된 데이터</span>
+                </div>
+
+                <div class="data-pagination-top">
+                    <div class="data-count-info">
+                        전체 <strong id="data-total-count">0</strong>개
+                    </div>
+
+                    <div class="data-controls">
+                        <div class="page-size-control">
+                            <label for="page-size">페이지당 표시</label>
+
+                            <select id="page-size">
+                                <option value="5" selected>5개</option>
+                                <option value="10">10개</option>
+                            </select>
+                        </div>
+
+                        <div class="data-sort-control">
+                            <label for="data-sort">날짜 정렬</label>
+
+                            <select id="data-sort">
+                                <option value="desc" selected>최신순</option>
+                                <option value="asc">오래된순</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="data-table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>날짜</th>
+                                <th>값</th>
+                                <th>메모</th>
+                                <th>관리</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="data-list">
+
+                            <tr>
+                                <td colspan="4">
+                                    데이터를 불러오는 중입니다.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+                <div class="data-pagination-bottom">
+                    <button
+                        id="first-page-button"
+                        class="secondary-button"
+                        disabled
+                    >
+                        처음
+                    </button>
+
+                    <button
+                        id="previous-page-button"
+                        class="secondary-button"
+                        disabled
+                    >
+                        이전
+                    </button>
+
+                    <span id="page-info">1 / 1</span>
+
+                    <button
+                        id="next-page-button"
+                        class="secondary-button"
+                        disabled
+                    >
+                        다음
+                    </button>
+
+                    <button
+                        id="last-page-button"
+                        class="secondary-button"
+                        disabled
+                    >
+                        끝
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- 모바일 전용 Floating 다크모드 버튼 -->
+<button
+    id="floating-dark-mode-toggle"
+    class="floating-theme-button"
+    aria-label="다크모드 전환"
+    title="다크모드 전환"
+>
+    ◐
+</button>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- 기존 JavaScript -->
+<script src="./js/app.js"></script>
+</body>
+</html>
