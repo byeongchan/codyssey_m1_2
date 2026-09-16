@@ -16,13 +16,16 @@ router = APIRouter(
 
 @router.post("", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    if request.provider.lower() not in ["openai", "gemini"]:
+    provider = request.provider.strip().lower()
+    question = request.question.strip()
+
+    if provider not in ["openai", "gemini"]:
         raise HTTPException(
             status_code=400,
             detail="provider는 openai 또는 gemini만 사용할 수 있습니다."
         )
 
-    if not request.question.strip():
+    if not question:
         raise HTTPException(
             status_code=400,
             detail="질문을 입력해주세요."
@@ -34,8 +37,8 @@ def chat(request: ChatRequest):
 
         # 2. AI 답변 생성
         answer = ask_ai(
-            provider=request.provider,
-            question=request.question,
+            provider=provider,
+            question=question,
             summary=summary
         )
 
@@ -43,12 +46,12 @@ def chat(request: ChatRequest):
         doc_ref = db.collection("conversations").document()
 
         document = {
-            "title": request.question[:50],
-            "provider": request.provider.lower(),
+            "title": question[:50],
+            "provider": provider,
             "messages": [
                 {
                     "role": "user",
-                    "content": request.question
+                    "content": question
                 },
                 {
                     "role": "assistant",
@@ -62,8 +65,8 @@ def chat(request: ChatRequest):
 
         # 4. 결과 반환
         return ChatResponse(
-            provider=request.provider,
-            question=request.question,
+            provider=provider,
+            question=question,
             answer=answer,
             conversation_id=doc_ref.id
         )
