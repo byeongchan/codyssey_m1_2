@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+firebase-admin
+google-genai
+openai
+python-dotenv
